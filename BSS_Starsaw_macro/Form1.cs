@@ -1,14 +1,13 @@
-﻿using System;
+﻿using AutoHotkey.Interop;
+using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
-using WindowsInput;
 
 namespace BSS_Starsaw_macro
 {
     public partial class Form1 : Form
     {
-        InputSimulator simulator = new InputSimulator();
         private Thread _macroThread;
         private bool _isMacroRunning;
 
@@ -23,7 +22,7 @@ namespace BSS_Starsaw_macro
 
         private void btn_github_click(object sender, EventArgs e)
         {
-            OpenUrlInBrowser("https://github.com/");
+            OpenUrlInBrowser("https://github.com/Atomixal/StarsawMacro-BSS");
         }
 
         private void OpenUrlInBrowser(string url)
@@ -56,19 +55,14 @@ namespace BSS_Starsaw_macro
         private void StartMacro()
         {
             if (_isMacroRunning) return;
-
             _isMacroRunning = true;
             _macroThread = new Thread(() =>
             {
+                var ahk = AutoHotkeyEngine.Instance;
                 Thread.Sleep(3000);
                 while (_isMacroRunning)
                 {
-                    for (int i = 0; i < 3; i++)
-                    {
-                        if (!_isMacroRunning) return;
-                        simulator.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.VK_6);
-                        Thread.Sleep(1100);
-                    }
+                    ahk.LoadFile("./BSS_Starsaw_macro.ahk");
 
                     int totalSleep = 41700;
                     int sleepInterval = 100; // 100 ms intervals
